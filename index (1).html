@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculadora de Crafteos</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<datalist id="cat-list"></datalist>
+
+<header class="hdr">
+  <div><h1>🔨 Calculadora de Crafteos</h1><div class="sub">Recetas multi-salida, fluidos (mB), energía por receta y subproductos</div></div>
+  <nav class="tabs">
+    <button id="tab-db" class="tab" onclick="GT.showTab('db')">🗄 Base de Datos</button>
+    <button id="tab-calc" class="tab" onclick="GT.showTab('calc')">🧮 Calculadora</button>
+  </nav>
+</header>
+
+<!-- ===================== BASE DE DATOS ===================== -->
+<main id="view-db" class="view">
+  <div class="db-grid">
+    <section class="col">
+      <div class="panel fill">
+        <h2>📦 Objetos <button class="btn btn-pri" onclick="GT.dbui.addItem()">＋ Nuevo</button></h2>
+        <input id="search" class="inp" placeholder="🔍 Buscar objeto…" oninput="GT.dbui.renderList()" style="margin-bottom:8px">
+        <div id="filters" class="stack" style="margin-bottom:6px"></div>
+        <div id="item-list" class="scroll list"></div>
+      </div>
+    </section>
+
+    <section class="col"><div id="editor" class="panel"></div></section>
+
+    <section class="col col-side">
+      <div class="panel">
+        <h2>🏗️ Máquinas <button class="btn btn-dark" onclick="GT.dbui.addMachine()">＋ Nueva</button></h2>
+        <div id="machine-list" class="stack"></div>
+      </div>
+      <div class="panel row wrap">
+        <button class="btn btn-soft" onclick="GT.dbui.exportDb()">⬇ Exportar</button>
+        <label class="btn btn-soft" style="cursor:pointer">⬆ Importar<input type="file" accept=".json" class="hidden" onchange="GT.dbui.importDb(this)"></label>
+        <button class="btn btn-danger" onclick="GT.dbui.resetDb()">↺ Ejemplo</button>
+      </div>
+    </section>
+  </div>
+</main>
+
+<!-- ===================== CALCULADORA ===================== -->
+<main id="view-calc" class="view hidden">
+  <div class="panel calc-bar">
+    <div class="f item"><label>Objeto deseado</label><select id="c-item" class="inp" onchange="GT.calc.run()"></select></div>
+    <div class="f"><label>Modo</label><div class="seg"><button id="m-rate" onclick="GT.calc.setMode('rate')">Por tiempo</button><button id="m-total" onclick="GT.calc.setMode('total')">Total</button></div></div>
+    <div class="f qty"><label id="c-qty-l">Cantidad</label><input id="c-qty" type="number" min="0" step="any" value="1" class="inp" oninput="GT.calc.run()"></div>
+    <div class="f" id="rate-box"><label>Unidad de tiempo</label>
+      <select id="c-per" class="inp" onchange="GT.calc.run()"><option value="1">por segundo</option><option value="60" selected>por minuto</option><option value="3600">por hora</option></select></div>
+    <div class="f hidden" id="total-box"><label>En un plazo de</label>
+      <div class="row" style="gap:4px"><input id="c-T" type="number" min="0" step="any" value="10" class="inp" style="width:80px" oninput="GT.calc.run()">
+        <select id="c-Tu" class="inp" style="width:80px" onchange="GT.calc.run()"><option value="1">seg</option><option value="60" selected>min</option><option value="3600">h</option></select></div></div>
+    <div class="f"><label>Salidas con probabilidad</label>
+      <div class="seg"><button id="p-avg" class="on" onclick="GT.calc.setProb('avg')" title="Considera qty × chance">🎲 Promedio</button><button id="p-guaranteed" onclick="GT.calc.setProb('guaranteed')" title="Ignora salidas con chance &lt; 1.0">🔒 Garantizado</button></div></div>
+  </div>
+  <div id="results"></div>
+</main>
+
+<script src="js/data.js"></script>
+<script src="js/engine.js"></script>
+<script src="js/ui-common.js"></script>
+<script src="js/ui-db.js"></script>
+<script src="js/ui-calc.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
